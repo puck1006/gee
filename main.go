@@ -12,6 +12,8 @@ func main() {
 	http.HandleFunc("/hello", helloHandler)
 	log.Fatal(http.ListenAndServe(":9999", nil))
 
+	fmt.Println("测试git是否推送成功")
+
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {

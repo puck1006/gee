@@ -6,23 +6,22 @@ import (
 	"net/http"
 )
 
-func main() {
+type Engine struct{}
 
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/hello", helloHandler)
-	log.Fatal(http.ListenAndServe(":9999", nil))
-	fmt.Println("测试git是否推送成功!!!")
+func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
-}
+	switch req.URL.Path {
+	case "/":
+		fmt.Fprintf(w, "the path is %s", req.URL.Path)
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "the path is %s", r.URL.Path)
-}
-
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-
-	for k, v := range r.Header {
-		fmt.Fprintf(w, "Header[%s] = %s\n", k, v)
+	case "/hello":
+		for k, v := range req.Header {
+			fmt.Fprintf(w, "Header[%s] = %s\n", k, v)
+		}
 	}
+}
+
+func main() {
+	log.Fatal(http.ListenAndServe(":9999", &Engine{}))
 
 }

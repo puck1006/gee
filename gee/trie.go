@@ -6,7 +6,7 @@ type node struct {
 	pattern  string  //等待匹配的路由
 	part     string  //路由中的一部分
 	children []*node //子节点
-	isWild   bool
+	isWild   bool    //是否是动态路由
 }
 
 func (n *node) matchChild(part string) *node {

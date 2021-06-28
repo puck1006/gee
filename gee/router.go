@@ -17,6 +17,7 @@ func newRouter() *router {
 		roots:    make(map[string]*node),
 	}
 }
+
 func parsePattern(pattern string) []string {
 	vs := strings.Split(pattern, "/")
 

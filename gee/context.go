@@ -6,14 +6,18 @@ import (
 	"net/http"
 )
 
-type Context struct {
-	Writer     http.ResponseWriter
-	Req        *http.Request
-	Path       string
-	Method     string
-	StatusCode int
-	Params     map[string]string
-}
+type (
+	Context struct {
+		Writer     http.ResponseWriter
+		Req        *http.Request
+		Path       string
+		Method     string
+		StatusCode int
+		Params     map[string]string
+		handles    []HandlerFunc
+		index      int
+	}
+)
 
 type H map[string]interface{}
 
@@ -23,6 +27,21 @@ func NewContext(w http.ResponseWriter, req *http.Request) *Context {
 		Req:    req,
 		Path:   req.URL.Path,
 		Method: req.Method,
+		index:  -1,
+	}
+}
+
+func (c *Context) Fail(code int, err string) {
+	c.index = len(c.handles)
+	c.JSON(code, H{"message": err})
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handles)
+
+	for ; c.index < s; c.index++ {
+		c.handles[c.index](c)
 	}
 }
 

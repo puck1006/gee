@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"text/template"
 )
 
 type HandlerFunc func(*Context)
@@ -33,6 +34,12 @@ func New() *Engine {
 		engine: engine,
 	}
 	engine.groups = []*RouterGroup{engine.RouterGroup}
+	return engine
+}
+
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
 	return engine
 }
 
